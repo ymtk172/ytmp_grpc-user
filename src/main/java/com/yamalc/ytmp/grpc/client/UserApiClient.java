@@ -2,6 +2,7 @@ package com.yamalc.ytmp.grpc.client;
 
 import com.yamalc.ytmp.grpc.user.AuthenticateRequest;
 import com.yamalc.ytmp.grpc.user.AuthenticateResponse;
+import com.yamalc.ytmp.grpc.user.AuthenticateResponseType;
 import com.yamalc.ytmp.grpc.user.UserGrpc;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
@@ -30,7 +31,7 @@ public class UserApiClient {
         return simpleClient;
     }
 
-    public void authenticate(String id, String password) {
+    public AuthenticateResponseType authenticate(String id, String password) {
         AuthenticateRequest request =
                 AuthenticateRequest
                         .newBuilder()
@@ -40,13 +41,14 @@ public class UserApiClient {
 
         try {
             AuthenticateResponse response = blockingStub.authenticate(request);
-
             logger.info(String.format("response: result = %b", response.getAuthenticateResult()));
+            return response.getAuthenticateResult();
         } catch (StatusRuntimeException e) {
             Status status = Status.fromThrowable(e);
             logger.info("error: status code = " + status.getCode() + ", description = " + status.getDescription());
             e.printStackTrace();
         }
+        return null;
     }
 
     public void shutdown() throws InterruptedException {
