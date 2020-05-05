@@ -7,22 +7,25 @@ option objc_class_prefix = "SPT";
 
 package user;
 
-enum AuthenticateResponseType {
-    OK = 0;
-    WRONG_PASSWORD = 1;
-    NOT_EXISTS = 2;
-}
-
 service User {
-    rpc Authenticate (AuthenticateRequest) returns (AuthenticateResponse) {}
+    rpc GetUserInfo (UserIdRequest) returns (UserInfoResponse) {}
+    rpc RegisterUserInfo (UserInfoRequest) returns (RegisterUserInfoResponse) {}
 }
 
-message AuthenticateRequest {
+message UserIdRequest {
     string id = 1;
-    string password = 2;
 }
 
-message AuthenticateResponse {
+message UserInfoResponse {
     string id = 1;
-    AuthenticateResponseType authenticateResult = 2;
+    string displayName = 2;
+}
+
+message UserInfoRequest {
+    string id = 1;
+    string displayName = 2;
+}
+
+message RegisterUserInfoResponse {
+    string resultCode = 1;
 }

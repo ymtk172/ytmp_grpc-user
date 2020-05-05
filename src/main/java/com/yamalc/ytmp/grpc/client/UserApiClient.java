@@ -1,9 +1,6 @@
 package com.yamalc.ytmp.grpc.client;
 
-import com.yamalc.ytmp.grpc.user.AuthenticateRequest;
-import com.yamalc.ytmp.grpc.user.AuthenticateResponse;
-import com.yamalc.ytmp.grpc.user.AuthenticateResponseType;
-import com.yamalc.ytmp.grpc.user.UserGrpc;
+import com.yamalc.ytmp.grpc.user.*;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.Status;
@@ -31,18 +28,37 @@ public class UserApiClient {
         return simpleClient;
     }
 
-    public AuthenticateResponseType authenticate(String id, String password) {
-        AuthenticateRequest request =
-                AuthenticateRequest
+    public UserInfoResponse getUserInfo(String userId) {
+        UserIdRequest request =
+                UserIdRequest
                         .newBuilder()
-                        .setId(id)
-                        .setPassword(password)
+                        .setId(userId)
                         .build();
 
         try {
-            AuthenticateResponse response = blockingStub.authenticate(request);
-            logger.info(String.format("response: result = %b", response.getAuthenticateResult()));
-            return response.getAuthenticateResult();
+            UserInfoResponse response = blockingStub.getUserInfo(request);
+            logger.info(String.format("response: result = %b %b", response.getId(), response.getDisplayName()));
+            return response;
+        } catch (StatusRuntimeException e) {
+            Status status = Status.fromThrowable(e);
+            logger.info("error: status code = " + status.getCode() + ", description = " + status.getDescription());
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public RegisterUserInfoResponse registerUserInfoResponse(String id, String displayName) {
+        UserInfoRequest request =
+                UserInfoRequest
+                        .newBuilder()
+                        .setId(id)
+                        .setDisplayName(displayName)
+                        .build();
+
+        try {
+            RegisterUserInfoResponse response = blockingStub.registerUserInfo(request);
+            logger.info(String.format("response: result = %b", response.getResultCode()));
+            return response;
         } catch (StatusRuntimeException e) {
             Status status = Status.fromThrowable(e);
             logger.info("error: status code = " + status.getCode() + ", description = " + status.getDescription());
