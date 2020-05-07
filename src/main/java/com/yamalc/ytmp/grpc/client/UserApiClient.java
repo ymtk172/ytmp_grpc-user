@@ -57,7 +57,7 @@ public class UserApiClient {
 
         try {
             RegisterUserInfoResponse response = blockingStub.registerUserInfo(request);
-            logger.info(String.format("response: result = %b", response.getResultCode()));
+            logger.info(String.format("response:target ID = %s , result = %s", id, response.getResult().toString()));
             return response;
         } catch (StatusRuntimeException e) {
             Status status = Status.fromThrowable(e);

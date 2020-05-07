@@ -7,6 +7,13 @@ option objc_class_prefix = "SPT";
 
 package user;
 
+enum ResultType {
+    SUCCESS = 0;
+    FAILURE = 1;
+    NOT_EXISTS = 2;
+    ALREADY_EXISTS = 3;
+}
+
 service User {
     rpc GetUserInfo (UserIdRequest) returns (UserInfoResponse) {}
     rpc RegisterUserInfo (UserInfoRequest) returns (RegisterUserInfoResponse) {}
@@ -17,8 +24,9 @@ message UserIdRequest {
 }
 
 message UserInfoResponse {
-    string id = 1;
-    string displayName = 2;
+    ResultType result = 1;
+    string id = 2;
+    string displayName = 3;
 }
 
 message UserInfoRequest {
@@ -27,5 +35,5 @@ message UserInfoRequest {
 }
 
 message RegisterUserInfoResponse {
-    string resultCode = 1;
+    ResultType result = 1;
 }
