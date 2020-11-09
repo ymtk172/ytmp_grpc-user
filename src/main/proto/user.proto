@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+import "google/protobuf/timestamp.proto";
+
 option java_multiple_files = true;
 option java_package = "com.yamalc.ytmp.grpc.user";
 option java_outer_classname = "UserService";
@@ -27,6 +29,7 @@ message UserInfoResponse {
     ResultType result = 1;
     string id = 2;
     string displayName = 3;
+    google.protobuf.Timestamp lastLoginTimestamp = 4;
 }
 
 message UserInfoRequest {
