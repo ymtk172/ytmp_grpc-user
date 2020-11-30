@@ -13,7 +13,7 @@ enum ResultType {
     SUCCESS = 0;
     FAILURE = 1;
     NOT_EXISTS = 2;
-    ALREADY_EXISTS = 3;
+//    ALREADY_EXISTS = 3;
 }
 
 service User {
@@ -33,10 +33,32 @@ message UserInfoResponse {
 }
 
 message UserInfoRequest {
+    repeated UserInfo userInfo = 1;
+}
+
+message UserInfo {
     string id = 1;
     string displayName = 2;
 }
 
 message RegisterUserInfoResponse {
     ResultType result = 1;
+}
+
+enum ErrorCode {
+    ERROR = 0;
+    VALIDATION_ERROR = 1;
+}
+
+message ErrorInfo {
+    string errorLineNumber = 1;
+    string businessErrorCode = 2;
+    int32 errorField = 3;
+    string errorDescription = 4;
+}
+
+message ErrorDetail {
+    ErrorCode code = 1;
+    string message = 2;
+    repeated ErrorInfo errorInfo = 3;
 }

@@ -6,6 +6,7 @@ import io.grpc.ManagedChannelBuilder;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
@@ -47,24 +48,21 @@ public class UserApiClient {
         return null;
     }
 
-    public RegisterUserInfoResponse registerUserInfoResponse(String id, String displayName) {
-        UserInfoRequest request =
+    public RegisterUserInfoResponse registerUserInfoResponse(UserInfoRequest userInfoRequest) {
+        List<UserInfo> userInfoList = userInfoRequest.getUserInfoList();
+        UserInfoRequest.Builder request =
                 UserInfoRequest
-                        .newBuilder()
-                        .setId(id)
-                        .setDisplayName(displayName)
-                        .build();
-
+                        .newBuilder();
+        userInfoList.forEach(request::addUserInfo);
         try {
-            RegisterUserInfoResponse response = blockingStub.registerUserInfo(request);
-            logger.info(String.format("response:target ID = %s , result = %s", id, response.getResult().toString()));
+            RegisterUserInfoResponse response = blockingStub.registerUserInfo(request.build());
+            logger.info(String.format("response:targets = %s , result = %s", userInfoList.toString(), response.getResult().toString()));
             return response;
         } catch (StatusRuntimeException e) {
             Status status = Status.fromThrowable(e);
             logger.info("error: status code = " + status.getCode() + ", description = " + status.getDescription());
-            e.printStackTrace();
+            throw e;
         }
-        return null;
     }
 
     public void shutdown() throws InterruptedException {
