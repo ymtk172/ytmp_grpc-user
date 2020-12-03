@@ -62,3 +62,10 @@ message ErrorDetail {
     string message = 2;
     repeated ErrorInfo errorInfo = 3;
 }
+
+message SampleObject {
+    map<string, string> stringMap = 1;
+    map<int32, string> int32Map = 2;
+    map<bool, ErrorCode> boolErrorCodeMap = 3;
+    map<sfixed64, string> sfixed64Map = 4;
+}
