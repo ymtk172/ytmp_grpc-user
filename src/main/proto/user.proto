@@ -43,11 +43,11 @@ message UserInfo {
 
 message RegisterUserInfoResponse {
     ResultType result = 1;
+    BusinessErrorDetail businessErrorDetail = 2;
 }
 
 enum ErrorCode {
     ERROR = 0;
-    VALIDATION_ERROR = 1;
 }
 
 message ErrorInfo {
@@ -68,4 +68,22 @@ message SampleObject {
     map<int32, string> int32Map = 2;
     map<bool, ErrorCode> boolErrorCodeMap = 3;
     map<sfixed64, string> sfixed64Map = 4;
+}
+
+enum BusinessErrorCode {
+    BUSINESS_ERROR = 0; // rename to avoid duplicating field with enum ErrorCode "'ERROR' is already defined in scope 'user'"
+    VALIDATION_ERROR = 1;
+}
+
+message BusinessErrorInfo {
+    string errorLineNumber = 1;
+    string businessErrorCode = 2;
+    int32 errorField = 3;
+    string errorDescription = 4;
+}
+
+message BusinessErrorDetail {
+    BusinessErrorCode code = 1;
+    string message = 2;
+    repeated BusinessErrorInfo errorInfo = 3;
 }
